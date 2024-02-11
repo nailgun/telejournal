@@ -13,5 +13,5 @@ while read line ; do
     --fail \
     --form "chat_id=${TELEGRAM_CHAT_ID}" \
     --form "text=$line" \
-    "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+    "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
 done
