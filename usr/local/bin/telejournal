@@ -1,95 +1,17 @@
 #!/usr/bin/env bash
 
-set -o errexit
-set -o pipefail
-set -o nounset
+set -euo pipefail
 
-log() {
-  echo "$*" >&2
-}
 
-# globals:
-#   TELEGRAM_BOT_TOKEN
-#
-# arguments:
-#   endpoint
-telegram_endpoint() {
-  echo "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/$1"
-}
-
-# globals:
-#   TELEGRAM_CHAT_ID
-#
-# arguments:
-#   message
-#   filename
-#
-# input:
-#   filecontent
-send_document() {
+# Follow the journal, reading every line
+journalctl -f $JOURNALCTL_OPTIONS | \
+while read line ; do
   curl \
     --silent \
     --output "/dev/null" \
     --show-error \
     --fail \
     --form "chat_id=${TELEGRAM_CHAT_ID}" \
-    --form "caption=$1" \
-    --form "document=@-;filename=$2" \
-    "$(telegram_endpoint "sendDocument")"
-}
-
-# globals:
-#   TELEGRAM_CHAT_ID
-#
-# arguments:
-#   message
-send_message() {
-  curl \
-    --silent \
-    --output "/dev/null" \
-    --show-error \
-    --fail \
-    --form "chat_id=${TELEGRAM_CHAT_ID}" \
-    --form "text=$1" \
-    "$(telegram_endpoint "sendMessage")"
-}
-
-# arguments:
-#   system_or_user_flag
-#   unitname
-#   propertyname
-read_unit_property() {
-  systemctl show "$1" "$2" --value -p "$3"
-}
-
-# arguments:
-#   system_or_user_flag
-#   unitname
-read_unit_journal() {
-  invocation_id="$(read_unit_property "$1" "$2" "InvocationID")"
-  journalctl "$1" -u "$2" -n "10000" _SYSTEMD_INVOCATION_ID="${invocation_id}"
-}
-
-# arguments:
-#   system_or_user_flag - either "--system" or "--user"
-#   unitname            - systemd unit name.
-main() {
-  active_state="$(read_unit_property "$1" "$2" "ActiveState")"
-  description="$(read_unit_property "$1" "$2" "Description")"
-  message="${description} completed.
-
-Hostname=${HOSTNAME}
-Unit=$2
-ActiveState=${active_state}"
-
-  if [[ "${active_state}" == "failed" ]]; then
-    log "Unit $2 failed. Sending notification with journal."
-    filename="$2.$(date "+%Y-%m-%dT%H-%M-%S%z").txt"
-    read_unit_journal "$1" "$2" | send_document "${message}" "${filename}"
-  else
-    log "Unit $2 has state ${active_state}. Sending simple notification"
-    send_message "${message}"
-  fi
-}
-
-main "$@"
+    --form "text=$line" \
+    "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+done
