@@ -8,3 +8,6 @@ After=network.target
 EnvironmentFile=/usr/local/etc/telejournal.env
 ExecStart=/usr/local/bin/telejournal
 Group=systemd-journal
+
+[Install]
+WantedBy=multi-user.target

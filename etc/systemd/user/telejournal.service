@@ -7,3 +7,6 @@ After=network.target
 [Service]
 EnvironmentFile=%h/.config/telejournal.env
 ExecStart=/usr/local/bin/telejournal
+
+[Install]
+WantedBy=multi-user.target
