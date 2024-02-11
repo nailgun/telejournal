@@ -1,10 +1,10 @@
 SRC_BIN            = $(wildcard usr/local/bin/*)
-SRC_ETC            = $(wildcard usr/local/etc/systemd-telegram/*)
+SRC_ETC            = $(wildcard usr/local/etc/telejournal/*)
 SRC_SYSTEMD_SYSTEM = $(wildcard etc/systemd/system/*)
 SRC_SYSTEMD_USER   = $(wildcard etc/systemd/user/*)
 
 DST_BIN            = /usr/local/bin
-DST_ETC            = /usr/local/etc/systemd-telegram
+DST_ETC            = /usr/local/etc/telejournal
 DST_SYSTEMD_SYSTEM = /etc/systemd/system
 DST_SYSTEMD_USER   = /etc/systemd/user
 

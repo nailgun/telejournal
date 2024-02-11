@@ -1,0 +1,10 @@
+[Unit]
+Description=Telegram notification for %I
+Documentation=https://github.com/lukasdietrich/telejournal
+Wants=network.target
+After=network.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=%h/.config/telejournal/telegram.env
+ExecStart=/usr/local/bin/telejournal --user "%i"

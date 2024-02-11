@@ -1,10 +1,7 @@
-# systemd-telegram - Telegram notifications for systemd units
+# telejournal
 
-_Disclaimer_: This project is not affiliated with [systemd][systemd]. The name
-may suggest it, but I just could not come up with something better.
-
-This repository provides a script and systemd service to send notifications via
-[Telegram][telegram] after a unit completes.
+Monitor journald in real time and get [Telegram][telegram] messages when
+patterns match. This repository provides a script and systemd service.
 
 ## Requirements
 
@@ -20,8 +17,8 @@ As with everything coming from the internet, please review the files before
 executing anything!
 
 ```sh
-git clone https://github.com/lukasdietrich/systemd-telegram
-cd systemd-telegram/
+git clone https://github.com/nailgun/telejournal
+cd telejournal/
 sudo make install
 ```
 
@@ -48,31 +45,13 @@ personal `chat_id`. To create both, please see the documentation of the
 [BotFather][botfather].
 
 Once obtained, both secrets need to be configured in
-`/usr/local/etc/systemd-telegram/telegram.env`.
+`/usr/local/etc/telejournal/telegram.env`.
 
 ### Using `--user` units
 
 To send notifications with `--user` units, you need to add the above bot secrets
-(or a new pair) to `~/.config/systemd-telegram/telegram.env`.
+(or a new pair) to `~/.config/telejournal/telegram.env`.
 
-### Send notifications on failure
-
-To send a notification on failure (including the journal logs), you must create
-a drop-in for the [service][systemd.service] in question.
-
-```sh
-systemctl edit my-service.service
-
-# [Unit]
-# OnFailure=systemd-telegram@%n.service
-```
-
-
-### Send notifications on success
-
-If you want to send notifications on success, too, add another line with
-`OnSuccess` instead of `OnFailure`. Successful executions do not include journal
-logs.
 
 [telegram]: https://telegram.org/
 [botfather]: https://core.telegram.org/bots#6-botfather
