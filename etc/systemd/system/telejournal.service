@@ -1,0 +1,10 @@
+[Unit]
+Description=Journal to telegram
+Documentation=https://github.com/nailgun/telejournal
+Wants=network.target
+After=network.target
+
+[Service]
+EnvironmentFile=/usr/local/etc/telejournal.env
+ExecStart=/usr/local/bin/telejournal
+Group=systemd-journal
